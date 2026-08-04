@@ -4,19 +4,19 @@
 
 Coco listens to a child, understands what they say, generates a child-friendly response using AI, and speaks the response aloud.
 
-## ✨ Features
+##  Features
 
-- 🎙️ **Voice interaction** — listens to spoken questions and commands.
-- 🤖 **AI-powered conversation** — uses Google's Gemini model to generate natural responses.
-- 🔊 **Text-to-speech** — converts Coco's responses into spoken audio using Edge TTS.
-- 🇮🇳 **English and Hindi support** — can respond in English or Hindi depending on the language used by the child.
-- 🧠 **Conversation memory** — stores recent conversation history for more continuous interactions.
-- 👤 **User profile support** — can remember profile information such as the child's preferred name.
-- 🎭 **Multiple personalities** — supports playful, storyteller, teacher, and bedtime modes.
-- 💡 **ESP32 integration** — communicates with an ESP32 to reflect states such as listening, thinking, speaking, and idle using LEDs.
-- 🌐 **Flask-based interface** — Python backend exposes endpoints for communication and control.
+-  **Voice interaction** — listens to spoken questions and commands.
+-  **AI-powered conversation** — uses Google's Gemini model to generate natural responses.
+-  **Text-to-speech** — converts Coco's responses into spoken audio using Edge TTS.
+-  **English and Hindi support** — can respond in English or Hindi depending on the language used by the child.
+-  **Conversation memory** — stores recent conversation history for more continuous interactions.
+-  **User profile support** — can remember profile information such as the child's preferred name.
+-  **Multiple personalities** — supports playful, storyteller, teacher, and bedtime modes.
+-  **ESP32 integration** — communicates with an ESP32 to reflect states such as listening, thinking, speaking, and idle using LEDs.
+-  **Flask-based interface** — Python backend exposes endpoints for communication and control.
 
-## ⚙️ How It Works
+##  How It Works
 
 ```text
 Child speaks
@@ -37,8 +37,9 @@ Speaker → Coco talks!
        ESP32
    LED status feedback
 ```
+[![Watch the demo video](https://youtu.be/B8djrWJRRiA?si=ASHInP3lYlE9o-Qi)](https://youtu.be/B8djrWJRRiA?si=ASHInP3lYlE9o-Qi)
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 ### Hardware
 - ESP32
@@ -56,7 +57,7 @@ Speaker → Coco talks!
 - Requests
 - ESP32 firmware / Arduino ecosystem
 
-## 🧸 Coco's Personalities
+##  Coco's Personalities
 
 Coco can operate with different conversational personalities:
 
@@ -77,7 +78,7 @@ Listening → Thinking → Speaking → Idle
 
 This allows LEDs or other hardware indicators to visually represent what the teddy is doing.
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### 1. Clone the repository
 
@@ -155,7 +156,7 @@ python Finalteddy.py
 
 Coco can then listen for speech, send the conversation to the AI model, generate a response, and speak it aloud.
 
-## 📁 Project Structure
+##  Project Structure
 
 ```text
 AI-Teddy-/
@@ -167,11 +168,11 @@ AI-Teddy-/
 
 Additional ESP32/Arduino firmware and hardware resources can be kept alongside the Python application as the hardware side of the project evolves.
 
-## 🔐 Security
+##  Security
 
 Do **not** commit Gemini API keys or other credentials to the repository. Store secrets in environment variables or a local `.env` file that is excluded through `.gitignore`.
 
-## 🔮 Future Improvements
+##  Future Improvements
 
 Possible improvements include:
 
@@ -183,14 +184,14 @@ Possible improvements include:
 - Parent-configurable controls
 - Expanded educational and storytelling modes
 
-## 🎯 Project Goal
+##  Project Goal
 
 The goal of AI Teddy is to explore how **embedded systems, voice interfaces, and generative AI** can be combined to create an engaging physical AI companion for children while keeping interactions simple, friendly, and age-appropriate.
 
 ## 👩‍💻 Creator
 
-Created by **Aashna Suri** as an exploration of AI, embedded systems, and human-computer interaction.
+Created by **Aashna Suri**.
 
 ---
 
-> 🧸 *Turning a traditional teddy bear into an interactive AI companion.*
+>  *Turning a traditional teddy bear into an interactive AI companion.*
