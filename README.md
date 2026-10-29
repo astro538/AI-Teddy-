@@ -1,197 +1,156 @@
-# 🧸 AI Teddy — Coco
+# AI Teddy — Coco, a Voice-Based AI Companion Prototype
 
-**AI Teddy** is an AI-powered talking teddy bear designed to be an interactive, friendly voice companion for children. The project combines **ESP32-based hardware**, **Python**, speech recognition, text-to-speech, and generative AI to turn a physical teddy bear into a conversational companion.
+AI Teddy explores a talking teddy-bear companion that combines speech recognition, a generative AI response, text-to-speech, a Python/Flask application, and ESP32 LED status feedback.
 
-Coco listens to a child, understands what they say, generates a child-friendly response using AI, and speaks the response aloud.
+This is a prototype for learning and demonstration. It should not be presented as a substitute for adult supervision, a validated educational product, or a secure system for storing children's information.
 
-##  Features
-
--  **Voice interaction** — listens to spoken questions and commands.
--  **AI-powered conversation** — uses Google's Gemini model to generate natural responses.
--  **Text-to-speech** — converts Coco's responses into spoken audio using Edge TTS.
--  **English and Hindi support** — can respond in English or Hindi depending on the language used by the child.
--  **Conversation memory** — stores recent conversation history for more continuous interactions.
--  **User profile support** — can remember profile information such as the child's preferred name.
--  **Multiple personalities** — supports playful, storyteller, teacher, and bedtime modes.
--  **ESP32 integration** — communicates with an ESP32 to reflect states such as listening, thinking, speaking, and idle using LEDs.
--  **Flask-based interface** — Python backend exposes endpoints for communication and control.
-
-##  How It Works
+## How it works
 
 ```text
 Child speaks
-     ↓
-Microphone / Speech Recognition
-     ↓
-Python Application
-     ↓
-Google Gemini AI
-     ↓
-Child-friendly response
-     ↓
-Edge Text-to-Speech
-     ↓
-Speaker → Coco talks!
+    |
+    v
+SpeechRecognition microphone capture
+    |
+    v
+Python application --> Google Gemini API
+    |                       |
+    |<----- text response --+
+    v
+Edge TTS --> speaker output
 
-          ↕
-       ESP32
-   LED status feedback
+Python app -- HTTP status update --> ESP32 --> 12-LED ring
+          listening / thinking / speaking / idle
 ```
-[![Watch the demo video](https://youtu.be/B8djrWJRRiA?si=ASHInP3lYlE9o-Qi)](https://youtu.be/B8djrWJRRiA?si=ASHInP3lYlE9o-Qi)
 
-##  Tech Stack
+## Features in the current code
 
-### Hardware
-- ESP32
-- Microphone
-- Speaker / audio output
-- LEDs / status indicators
-- Teddy bear enclosure
+- Speech recognition and voice-driven interaction.
+- Responses generated through Google's Gemini API using the `google-genai` client.
+- Spoken responses through Edge TTS and audio playback.
+- English/Hindi response behaviour in the system prompt.
+- Conversation history and a local profile file created at runtime.
+- Several conversational personality modes.
+- Optional ESP32 status updates over HTTP.
+- Flask endpoints for local application integration.
 
-### Software
-- Python
-- Flask
-- Google Gemini API (`google-genai`)
-- SpeechRecognition
-- Edge TTS
-- Requests
-- ESP32 firmware / Arduino ecosystem
-
-##  Coco's Personalities
-
-Coco can operate with different conversational personalities:
-
-| Mode | Behaviour |
-| --- | --- |
-| **Playful** | Fun, energetic and encouraging |
-| **Storyteller** | Tells gentle, imaginative stories |
-| **Teacher** | Explains concepts simply and patiently |
-| **Bedtime** | Uses a calm and soothing conversational style |
-
-## 🚦 ESP32 Status Feedback
-
-The Python application can send Coco's current state to the ESP32:
+## Repository structure
 
 ```text
-Listening → Thinking → Speaking → Idle
+AI-Teddy-/
+├── Finalteddy.py      # Python application, speech, Gemini, TTS, Flask, and status updates
+├── teddy_esp.ino      # ESP32 HTTP server and WS2812B status ring
+└── README.md
 ```
 
-This allows LEDs or other hardware indicators to visually represent what the teddy is doing.
+The application may create `teddy_history.json` and `teddy_profile.json` beside the Python script at runtime.
 
-##  Getting Started
+## Requirements
 
-### 1. Clone the repository
+- Python 3.10+ recommended; use versions compatible with the selected packages
+- Working microphone and speaker/audio output
+- Internet access for the Gemini API and Edge TTS
+- Google Gemini API key
+- ESP32 with Wi-Fi and a WS2812B-compatible 12-LED ring for hardware feedback
+- Arduino IDE, ESP32 board support, and FastLED for the firmware
+
+Install the core Python packages in a virtual environment:
 
 ```bash
 git clone https://github.com/astro538/AI-Teddy-.git
 cd AI-Teddy-
-```
-
-### 2. Create a Python virtual environment
-
-```bash
 python -m venv .venv
 ```
 
-Activate it on Windows:
-
-```bash
-.venv\Scripts\activate
-```
-
-On macOS/Linux:
-
-```bash
-source .venv/bin/activate
-```
-
-### 3. Install dependencies
-
-Install the Python packages used by the project, including:
-
-```bash
+**Windows PowerShell**
+```powershell
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
 pip install google-genai flask SpeechRecognition edge-tts playsound requests
 ```
 
-Depending on your microphone setup, an additional audio input package such as PyAudio may also be required.
+**macOS / Linux**
+```bash
+source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install google-genai flask SpeechRecognition edge-tts playsound requests
+```
 
-### 4. Configure the Gemini API key
+SpeechRecognition microphone support may require an additional audio input dependency such as PyAudio. Installation steps differ by operating system.
 
-Set your API key as an environment variable instead of placing it directly in the source code.
+## Configure the Gemini API
 
-Windows PowerShell:
+Set the key as an environment variable. Do not hard-code it or commit it to Git.
+
+**Windows PowerShell**
+```powershell
+$env:GEMINI_API_KEY = "YOUR_GEMINI_API_KEY"
+```
+
+**macOS / Linux**
+```bash
+export GEMINI_API_KEY="YOUR_GEMINI_API_KEY"
+```
+
+The checked-in Python code also accepts `GOOGLE_API_KEY` or the legacy `teddy` environment variable. Prefer `GEMINI_API_KEY` for clarity.
+
+## Configure ESP32 status feedback
+
+1. Open `teddy_esp.ino` in Arduino IDE.
+2. Install the ESP32 board package and FastLED library.
+3. Set Wi-Fi credentials locally in the sketch; use placeholders in any shared copy.
+4. Upload the sketch and read the ESP32's IP address from Serial Monitor at 115200 baud.
+5. Set the Python environment variable `ESP32_IP` to that address on the computer running `Finalteddy.py`.
+
+For Windows PowerShell:
 
 ```powershell
-$env:GEMINI_API_KEY="YOUR_API_KEY"
+$env:ESP32_IP = "192.168.x.x"
+$env:ESP32_ENABLED = "true"
 ```
 
-macOS/Linux:
+For macOS/Linux:
 
 ```bash
-export GEMINI_API_KEY="YOUR_API_KEY"
+export ESP32_IP="192.168.x.x"
+export ESP32_ENABLED="true"
 ```
 
-### 5. Configure ESP32 connectivity
+The computer and ESP32 must be able to reach one another on the same network. The Python code sends status to `http://<ESP32_IP>/status`.
 
-The application supports environment variables for ESP32 communication:
+## Run the application
 
-```text
-ESP32_IP
-ESP32_ENABLED
-```
-
-For example:
-
-```bash
-ESP32_IP=<your-esp32-ip>
-```
-
-Make sure the computer running the Python application and the ESP32 can communicate over the network.
-
-### 6. Run Coco
+After setting the API key and any hardware settings:
 
 ```bash
 python Finalteddy.py
 ```
 
-Coco can then listen for speech, send the conversation to the AI model, generate a response, and speak it aloud.
+The program starts its configured listener and uses the Gemini API when a speech input is processed. The Flask app is configured to bind to all interfaces on port 5000; only run it on a trusted network unless you add authentication and restrict access.
 
-##  Project Structure
+## Privacy and child safety
 
-```text
-AI-Teddy-/
-├── Finalteddy.py          # Main Python voice-assistant application
-├── teddy_history.json    # Conversation history (generated at runtime)
-├── teddy_profile.json    # User/profile preferences (generated at runtime)
-└── README.md
-```
+- The application sends recognized user input to an external generative-AI service for response generation.
+- Conversation history and profile preferences may be written to local JSON files.
+- Tell users/caregivers what is recorded, obtain appropriate consent, and provide a way to delete stored history.
+- Do not commit real conversation histories, profile data, API keys, Wi-Fi credentials, or other personal information.
+- Do not expose the Flask server to the public Internet without authentication, input limits, and appropriate privacy/security review.
+- Adult supervision is necessary; the model can make mistakes and should not be treated as an authority for medical, emergency, or other high-stakes questions.
 
-Additional ESP32/Arduino firmware and hardware resources can be kept alongside the Python application as the hardware side of the project evolves.
+## Troubleshooting
 
-##  Security
+**Gemini initialization fails:** check that `GEMINI_API_KEY` is set and valid, and that the key has access to the selected model.
 
-Do **not** commit Gemini API keys or other credentials to the repository. Store secrets in environment variables or a local `.env` file that is excluded through `.gitignore`.
+**No speech is detected:** check operating-system microphone permissions, the selected input device, and any required audio dependencies.
 
-##  Future Improvements
+**No speech output:** verify Internet access for Edge TTS, audio playback permissions, and speaker selection.
 
-Possible improvements include:
+**ESP32 LEDs do not change:** verify the board is connected to Wi-Fi, the IP address is correct, the computer can reach the device, and the sketch has started its HTTP server.
 
-- Fully self-contained teddy hardware
-- Improved child-specific speech recognition
-- Wake-word detection such as **“Hey Coco”**
-- Offline speech processing
-- More expressive LED and physical responses
-- Parent-configurable controls
-- Expanded educational and storytelling modes
+## Current limitations and future work
 
-##  Project Goal
+This repository does not include an automated end-to-end test suite, a benchmark for speech recognition quality, or a deployment-grade privacy/authentication design. Useful next steps include explicit caregiver controls, a wake-word workflow, offline speech options, persistent secure storage, network authentication, and tests for reconnection and API failures.
 
-The goal of AI Teddy is to explore how **embedded systems, voice interfaces, and generative AI** can be combined to create an engaging physical AI companion for children while keeping interactions simple, friendly, and age-appropriate.
+## License
 
-## 👩‍💻 Creator
-
-Created by **Aashna Suri**.
-
----
-
->  *Turning a traditional teddy bear into an interactive AI companion.*
+No explicit license file was identified when this README was prepared. Add a license before inviting reuse or redistribution.
